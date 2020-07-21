@@ -81,10 +81,10 @@
       <form id="content" action="javascript:guarda()">
         <h1>Canciones de Romeo Santos</h1>
         -Ingrese el nombre y album de canciones de Romeo Santos.-
-        <input id="nombreCancion" type="text" placeholder="Nombre de la cancion" pattern="[a-zA-Zàáâäãåąčćęèé
+        <input id="nombre" type="text" placeholder="Nombre de la cancion" pattern="[a-zA-Zàáâäãåąčćęèé
           êëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}" required/>
         
-        <input id="nombreAlbum" type="text" placeholder="Nombre del album" pattern="[a-zA-Zàáâäãåąčćęèé
+        <input id="ano_de_publicacion" type="number" placeholder="Año de publicacion" pattern="[a-zA-Zàáâäãåąčćęèé
             êëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}" required/>
           
         <br>
@@ -110,19 +110,19 @@
       alta();
       function muestraLista() {
         
-        firestore.collection("CANCIONES").orderBy("N_CANCION").onSnapshot
-        firestore.collection("CANCIONES").orderBy("N_ALBUM").onSnapshot(
+        firestore.collection("CANCION").orderBy("C_CANCION").onSnapshot
+        firestore.collection("CANCION").orderBy("C_ANPUBLICACION").onSnapshot(
           documentos => {
             let inner = "";
             documentos.forEach(doc =>
               inner += /* html */
               `<li>
                 <button type=button onclick="muestra('${cod(doc.id)}')">
-                  ${cod(doc.data().N_CANCION)}
+                  ${cod(doc.data().C_CANCION)}
                 </button>
 
                 <button type=button onclick="muestra('${cod(doc.id)}')">
-                  ${cod(doc.data().N_ALBUM)}
+                  ${cod(doc.data().C_ANPUBLICACION)}
                 </button>
               </li>`);
             lista.innerHTML = inner;
@@ -138,8 +138,8 @@
         agregar.disabled = true; // Deshabilita el botón "agregar".
         eliminar.disabled = true; // Deshabilita el botón "eliminar".
         id = ""; // Pone en blanco el id, porque todavía no agregamos a la BD.
-        nombreCancion.value = ""; // Pone en blanco los datos porque todavía no hay.
-        nombreAlbum.value = "";
+        nombre.value = ""; // Pone en blanco los datos porque todavía no hay.
+        ano_de_publicacion.value = "";
 
       }
       /** Prepara la forma para modificar el documento que corresponde al
@@ -151,12 +151,12 @@
           eliminar.disabled = false; // Habilita el botón "eliminar".
           /* Recupera el documento con el id seleccionado en la colección
            * "PASATIEMPO". */
-          let doc = await firestore.collection("CANCIONES").doc(idSel).get();
+          let doc = await firestore.collection("CANCION").doc(idSel).get();
           if (doc.exists) {
             id = doc.id;
             let data = doc.data();
-            nombreCancion.value = data.N_CANCION || "";
-            nombreAlbum.value = data.N_ALBUM || "";
+            nombre.value = data.C_CANCION || "";
+            ano_de_publicacion.value = data.C_ANPUBLICACION || "";
           } else {
             alert("La cancion y album no ha sido registrado.");
             alta();
@@ -168,17 +168,17 @@
       async function guarda() {
         try {
           const modelo = {
-            N_CANCION: nombreCancion.value.trim(), 
-            N_ALBUM: nombreAlbum.value.trim()
+            C_CANCION: nombre.value.trim(), 
+            C_ANPUBLICACION: ano_de_publicacion.value.trim()
           };
           if (id) {
             /* Modifica el modelo en la base de datos en base al id y espera a
              * que termine. */
-            await firestore.collection("CANCIONES").doc(id).set(modelo);
+            await firestore.collection("CANCION").doc(id).set(modelo);
           } else {
             /* Agrega el modelo a la base de datos, genera automáticamente el
              * id y espera a que termine. */
-            await firestore.collection("CANCIONES").add(modelo);
+            await firestore.collection("CANCION").add(modelo);
           }
           alta();
         } catch (e) {
@@ -189,7 +189,7 @@
         try {
           /* Elimina el documento en la base de datos usando el id y espera a
            * que termine. */
-          await firestore.collection("CANCIONES").doc(id).delete();
+          await firestore.collection("CANCION").doc(id).delete();
           alta();
         } catch (e) {
           procesaError(e);
