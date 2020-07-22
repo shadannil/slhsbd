@@ -17,7 +17,8 @@
  .demo-ribbon {
 	width: 100%;
 	height: 40vh;
-	background-color: darksalmon;
+	background:
+	  linear-gradient(50deg,#7e5871,#b385ab);
 	-webkit-flex-shrink: 0;
 		-ms-flex-negative: 0;
 			flex-shrink: 0;
@@ -25,7 +26,8 @@
   
   .demo-main {
 	margin-top: -35vh;
-	background-image: url("/img/rs.jpg");
+	background:
+	  linear-gradient(50deg,#7e5871,#b385ab);
 	-webkit-flex-shrink: 0;
 		-ms-flex-negative: 0;
 			flex-shrink: 0;
